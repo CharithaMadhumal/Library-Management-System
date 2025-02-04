@@ -175,10 +175,10 @@ router.post('/create-donation', async (req, res) => {
         }
 
         // check if existing inventory for the book
-        let existingInventory = await Inventory.findOne({ bookID: bookId });
+        let existingInventory = await Inventory.findOne({ bookId: bookId });
 
         if (existingInventory) {
-            existingInventory.copies += parseInt(quantity);
+            existingInventory.copies += quantity;
             await existingInventory.save();
         } else {
             const newInventory = new Inventory({
@@ -187,7 +187,7 @@ router.post('/create-donation', async (req, res) => {
                 category,
                 language,
                 author,
-                copies: parseInt(quantity),
+                copies: quantity,
                 status: 'In Stock'
             });
             await newInventory.save();
@@ -214,6 +214,44 @@ router.post('/create-donation', async (req, res) => {
     }
 });
 
+
+router.get('/get-all-books', async (req,res)=>{
+    try {
+        const books = await Book.find();
+
+        if(books.length === 0){
+            return res.status(404).json({error: "No books found"})
+        }
+
+        res.status(200).json({
+            message: 'Books retrieved successfully',
+            books: books
+        })
+
+    } catch (error) {
+        res.status(500).json({error: "Internal server error"})
+        
+    }
+})
+
+router.get('/get-inventory', async (req,res)=>{
+    try {
+        const inventory = await Inventory.find().populate('bookId', 'bookTitle category language author');
+
+        if(inventory.length === 0){
+            return res.status(404).json({error: "No inventory found"})
+        }
+
+        res.status(200).json({
+            message: 'Inventory retrieved successfully',
+            inventory: inventory,
+        })
+    } catch (error) {
+        res.status(500).json({error: "Internal server error",details: error.message})
+       
+        
+    }
+})
 
 
 
