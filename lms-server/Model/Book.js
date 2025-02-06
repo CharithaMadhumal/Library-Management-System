@@ -22,6 +22,11 @@ const bookSchema = new mongoose.Schema({
    author : {
         type: String,
         required: true,
+    },
+    bookCode: {
+        type:String,
+        unique: true,
+        required: true
     }
    
 },{timestamps: true})

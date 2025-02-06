@@ -24,6 +24,7 @@ require('./Model/Book')
 require('./Model/Inventory')
 require('./Model/Reader')
 require('./Model/Donation')
+require('./Model/Record')
 
 
 //Routes
